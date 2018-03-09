@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8"/>
+	<title>Chirp8-WASM</title>
+	<link 	rel="shortcut icon" type="image/x-icon" href="chirp.ico">
+  </head>
+  
+  <body id="body" onload="startChip();">
+	
+	<div 	id = "foreground">
+		<canvas 	id="canvas" width="256" height="128"></canvas>
+	</div>
+	
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<script type = "text/javascript" src = "bundle\bundle.js"></script>
+	<script>
+		
+		function clearScreen()
+		{
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+
+			context.fillStyle = "black";
+			context.fillRect(0, 0, 4 * 64, 4 * 32);
+
+		}
+		
+		function drawPixel(x, y, enabled)
+		{
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+			
+			context.fillStyle = (enabled) ? "white" : "black";
+			context.fillRect(x * 4, y * 4, 4, 4);
+		}
+		
+		function startChip()
+		{
+			clearScreen();
+		
+			window.Module = {};
+
+			const imports = {
+			  env: {
+
+				drawPixelWrapper(x, y, enabled)
+				{
+					drawPixel(x, y, enabled);
+				},
+				
+				clearScreenWrapper()
+				{
+					clearScreen();
+				}, 
+				
+				invalid_opcode_alert(memorypointer, opcode)
+				{
+					alert("Invalid opcode: Memory Pointer: " + memorypointer.toString(16) + " Opcode: " +
+							opcode.toString(16));
+				},
+				
+				log_loop(mempointer, opcode, i, reg_x, reg_y)
+				{
+					console.log("MEMP: " + mempointer.toString(16) + " Opcode: " +
+						opcode.toString(16) + " I: " + i.toString(16) +  " X: " + 
+						reg_x.toString() + " Y: " + reg_y.toString());
+				},
+
+				get_rand()
+				{
+					return Math.floor(Math.random() * Math.floor(65535));
+				},
+
+			  }
+			};
+
+			fetchAndInstantiate("./Chirp8_Wasm.wasm", imports)
+			.then(mod => {
+				Module.memory     		 	= mod.exports.memory;
+				Module.chip_loop       	 	= mod.exports.chip_loop;
+				Module.initialize			= mod.exports.initialize;
+				Module.decrement_timers		= mod.exports.decrement_timers;
+				Module.set_key              = mod.exports.set_key;	
+				Module.dealloc_str = function() {}
+				
+				Module.initialize();
+
+				function updateTimers() {
+					Module.decrement_timers();
+				}
+				
+				function loop() {
+					Module.chip_loop();
+					setTimeout(loop, 4)
+				}
+
+				setInterval(updateTimers, 1000/60);
+				loop();
+				
+				
+				document.addEventListener('keydown', function(event) {
+
+					if(event.keyCode == 49) {
+						//alert('1 was pressed');
+						Module.set_key(0, true);	
+					}
+					if(event.keyCode == 50) {
+						//alert('2 was pressed');
+						Module.set_key(1, true);	
+					}
+					if(event.keyCode == 51) {
+						//alert('3 was pressed');
+						Module.set_key(2, true);	
+					}
+					if(event.keyCode == 52) {
+						//alert('4 was pressed');
+						Module.set_key(3, true);	
+					}
+					if(event.keyCode == 81) {
+						//alert('Q was pressed');
+						Module.set_key(4, true);	
+					}
+					if(event.keyCode == 87) {
+						//alert('W was pressed');
+						Module.set_key(5, true);	
+					}
+					if(event.keyCode == 69) {
+						//alert('E was pressed');
+						Module.set_key(6, true);	
+					}
+					if(event.keyCode == 82) {
+						//alert('R was pressed');
+						Module.set_key(7, true);	
+					}
+					if(event.keyCode == 65) {
+						//alert('A was pressed');
+						Module.set_key(8, true);	
+					}
+					if(event.keyCode == 83) {
+						//alert('S was pressed');
+						Module.set_key(9, true);	
+					}
+					if(event.keyCode == 68) {
+						//alert('D was pressed');
+						Module.set_key(10, true);	
+					}
+					if(event.keyCode == 70) {
+						//alert('F was pressed');
+						Module.set_key(11, true);	
+					}
+				
+					if(event.keyCode == 90) {
+						//alert('Z was pressed');
+						Module.set_key(12, true);	
+					}
+					if(event.keyCode == 88) {
+						//alert('X was pressed');
+						Module.set_key(13, true);	
+					}
+					if(event.keyCode == 67) {
+						//alert('C was pressed');
+						Module.set_key(14, true);	
+					}
+					if(event.keyCode == 86) {
+						//alert('V was pressed');
+						Module.set_key(15, true);	
+					}
+				});
+
+				document.addEventListener('keyup', function(event) {
+					if(event.keyCode == 49) {
+						//alert('1 was released');
+						Module.set_key(0, false);	
+					}
+					if(event.keyCode == 50) {
+						//alert('2 was released');
+						Module.set_key(1, false);	
+						
+					}
+					if(event.keyCode == 51) {
+						//alert('3 was released');
+						Module.set_key(2, false);	
+					}
+					if(event.keyCode == 52) {
+						//alert('4 was released');
+						Module.set_key(3, false);	
+					}
+					if(event.keyCode == 81) {
+						//alert('Q was released');
+						Module.set_key(4, false);	
+					}
+					if(event.keyCode == 87) {
+						//alert('W was released');
+						Module.set_key(5, false);	
+					}
+					if(event.keyCode == 69) {
+						//alert('E was released');
+						Module.set_key(6, false);	
+					}
+
+					if(event.keyCode == 82) {
+						//alert('R was released');
+						Module.set_key(7, false);	
+					}
+					if(event.keyCode == 65) {
+						//alert('A was released');
+						Module.set_key(8, false);	
+					}
+					if(event.keyCode == 83) {
+						//alert('S was released');
+						Module.set_key(9, false);	
+					}
+					if(event.keyCode == 68) {
+						//alert('D was released');
+						Module.set_key(10, false);	
+					}
+					if(event.keyCode == 70) {
+						//alert('F was released');
+						Module.set_key(11, false);	
+					}
+					if(event.keyCode == 90) {
+						//alert('Z was released');
+						Module.set_key(12, false);	
+					}
+					if(event.keyCode == 88) {
+						//alert('X was released');
+						Module.set_key(13, false);	
+					}
+					if(event.keyCode == 67) {
+						//alert('C was released');
+						Module.set_key(14, false);	
+					}
+					if(event.keyCode == 86) {
+						//alert('V was released');
+						Module.set_key(15, false);	
+					}
+				
+				
+				});
+				
+			});
+		}
+	  
+    </script>
+  </body>
+</html>

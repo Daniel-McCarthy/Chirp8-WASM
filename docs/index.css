@@ -1,0 +1,22 @@
+body
+{
+	background-color:pink;
+}
+
+#foreground
+{
+	text-align: center;
+	margin: 0 auto;
+	width:300px;
+	height:200px;
+	background-color: #FF90AD;
+	border-radius: 25px;
+	border: 3px solid white;
+}
+
+#canvas
+{
+	 position:relative;
+	 top: 35px;
+}
+
