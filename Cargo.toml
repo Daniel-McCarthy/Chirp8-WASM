@@ -1,0 +1,10 @@
+[package]
+name = "Chirp8-Wasm"
+version = "0.1.0"
+authors = ["Dan McCarthy <dan.willy.mccarthy@gmail.com>"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rand = "0.4"
