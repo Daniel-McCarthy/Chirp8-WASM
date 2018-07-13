@@ -77,12 +77,12 @@
 
 			fetchAndInstantiate("./Chirp8_Wasm.wasm", imports)
 			.then(mod => {
-				Module.memory     		 	= mod.exports.memory;
-				Module.chip_loop       	 	= mod.exports.chip_loop;
-				Module.initialize			= mod.exports.initialize;
-				Module.decrement_timers		= mod.exports.decrement_timers;
-				Module.set_key              = mod.exports.set_key;	
-				Module.dealloc_str = function() {}
+				Module.memory		= mod.exports.memory;
+				Module.chip_loop       	= mod.exports.chip_loop;
+				Module.initialize	= mod.exports.initialize;
+				Module.decrement_timers	= mod.exports.decrement_timers;
+				Module.set_key          = mod.exports.set_key;	
+				Module.dealloc_str 	= function() {}
 				
 				Module.initialize();
 
