@@ -52,7 +52,6 @@ pub unsafe fn draw_sprite(x: u8, y: u8, n: u8) {
 		
 		for j in 0..8 {
 			if bit_values[j] > 0 {
-				//draw_debug_alert(memory::MEMPOINTER as u16, memory::I as u16, x, y, n);
 				if xor_pixel(x.wrapping_add(j as u8), y.wrapping_add(i as u8)) {
 					collision = true;
 				}
