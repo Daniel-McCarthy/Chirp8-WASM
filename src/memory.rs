@@ -32,7 +32,6 @@ pub unsafe fn return_subroutine()
 pub unsafe fn call_subroutine(nnn: u16)
 {
 	STACKPOINTER -= 2;
-	//write_mem_u16(STACKPOINTER, MEMPOINTER);
 	CHIPMEM[STACKPOINTER + 1] = ((MEMPOINTER & 0xFF00) >> 8) as u8;
 	CHIPMEM[STACKPOINTER] = (MEMPOINTER & 0x00FF) as u8;
 	MEMPOINTER = nnn as usize;
